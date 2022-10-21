@@ -397,9 +397,15 @@ namespace System.Text.Json
 
             Debug.Assert(!valueSpan.IsEmpty ^ !valueSequence.IsEmpty);
 
+            JsonReaderState readerState = new(reader._readerOptions)
+            {
+                _lineNumber = _lineNumber;
+                _bytePositionInLine = _bytePositionInLine;
+            };
+
             return valueSpan.IsEmpty
-                ? new Utf8JsonReader(valueSequence, reader.CurrentState.Options)
-                : new Utf8JsonReader(valueSpan, reader.CurrentState.Options);
+                ? new Utf8JsonReader(valueSequence, readerState)
+                : new Utf8JsonReader(valueSpan, readerState);
         }
     }
 }
